@@ -20,6 +20,9 @@ intents = discord.Intents.all()
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
+# Ask user for format at start of script
+format_name = input("Which Format Are We Doing Tonight? ")
+
 
 @bot.event
 async def on_ready():
@@ -31,8 +34,10 @@ async def on_message(message):
     if message.guild.id == GUILD_ID and message.channel.id == CHANNEL_ID:
         if message.attachments:
             for attachment in message.attachments:
-                if attachment.filename.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')):
-                    folder_name = datetime.now().strftime('%Y-%m-%d')
+                if attachment.filename.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp', '.webm', '.mp4')):
+                    # Use the format name in the folder structure
+                    folder_name = os.path.join(
+                        format_name, datetime.now().strftime('%Y-%m-%d'))
                     if not os.path.exists(folder_name):
                         os.makedirs(folder_name)
                         logging.info(f'Created new directory: {folder_name}')
